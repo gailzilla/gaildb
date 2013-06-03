@@ -1,30 +1,69 @@
 #! /usr/bin/env python
 
-print "foo"
+import logging
+from sys import argv
+from os.path import expanduser
+
+logging.basicConfig(level=logging.WARN)
+
+db_path = expanduser('~/database.gdb')
+logging.debug("opening %s" % db_path)
+
+target = open(db_path, 'a')
+
+if len(argv) < 2:
+	print ("I'm sorry, you don't have enough args")
+
+action = argv[1]
+word = argv[2]
+
+logging.debug("action is %s" % action)
+logging.debug("word is %s" % word)
+
+if action == "set":
+	logging.debug("write '%s'" % argv[3])
+	target.write('\n')
+	target.write(word)
+	target.write(': ')
+	target.write(argv[3])
+	target.write('\n')
+	target.close()
+	print ("Success")
+
+
+	
+
+if action == "get":
+	target = open(db_path, 'r')
+	my_file = target.readlines()
+	for i in my_file:
+		i = i.strip()
+		if word in i:
+			print (i)
+	target.close()
+
+if action == "rm":
+	target = open(db_path, 'r')
+	lines = target.readlines()
+	target.close()
+
+	target = open(db_path, 'w')
+	for line in lines:
+		if word not in line or line == "\n":
+			target.write(line)
+	print ("Well, check your file.")
+	target.close()
+	#my_file = target.readlines()
+	#for i in my_file:
+	#	if word in i:
+	#		target.write(i)
+
+
+#filter list
 
 
 
 
 
 
-target = open('database.gdb', 'a')
-
-
-print "Now I'm going to ask you for three lines."
-
-line1 = raw_input("line 1: ")
-line2 = raw_input("line 2: ")
-line3 = raw_input("line 3: ") 
-
-print "I'm going to write these to the file."
-
-target.write(line1)
-target.write('\n')
-target.write(line2)
-target.write('\n')
-target.write(line3)
-target.write('\n')
-
-print "And finally, we close it." 
-target.close()
 
